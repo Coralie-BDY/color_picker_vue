@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"> 
+  <title>COlorPicker</title>
+  <script type="text/javascript" src="./node_modules/vue/dist/vue.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="row">
+      <div class="col-6">
+        <div class="col-12">
+          <hr />
+          <div class="form-group">
+            <label>Vert : </label>
+            <!-- on lie des inputs à l'instance avec une récupération du DOM -->
+            <input class="form-control" v-model="green" type="number" />
+          </div>
+          <hr />
+          <div class="form-group">
+            <label>Bleu : </label>
+            <input class="form-control" v-model="blue" type="number" />
+          </div>
+          <hr />
+          <div class="form-group">
+            <label>Rouge :</label>
+            <input class="form-control" v-model="red" type="number" />
+          </div>
+          <hr />
+          <div class="col-12">
+            <!-- on lie les boutons a des événements -->
+            <button class="btn btn-primary"@click="saveSquare">Sauvegarder</button>
+            <button class="btn btn-secondary" @click="reset">Annuler</button>
+          </div>
+          <hr />
+
+          <!-- ici on retourne ne nombre de carré q'il y a dans le tableau squares -->
+
+            <h3> Nombre de carrés : {{ nbrOfSquares }} </h3>
+          <hr />
+
+          <!-- on demande d'ajouter une couleur si aucunes données sont entrées dans l'input. -->
+
+          <div class="col-12" v-if="nbrOfSquares">
+
+            <!-- affichage d'un élément 'div' par carré créé. 
+              
+              Ici le 'v-bind' (écrit en raccourci avec ':') permet de définir la couleur de chaque carré en fonction des données sauvegardées. 
+              
+              Le 'v-on' (écrit en raccourci avec '@') permet d'écouter un événement JS natif, ici un clic. à chaque clic sur un carré, nous assignerons la couleur au gros carré -->
+
+            <div class="prevsquare" v-for="square in squares" @click="selectedSquare=square" :style="{ backgroundColor: square }"></div>
+          </div>
+          <h3 v-else> Ajouter des couleurs !</h3>
+        </div>
+      </div>
+      <div class="col-6">
+
+        <!-- le bind permet de mettre le style récupéré par 'selectedSquare' -->
+
+        <div class="square mx-auto" :style="{ backgroundColor: selectedSquare }"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    new Vue({
+      el:'#app',
+      data: {
+        green: 0,
+        blue: 0,
+        red: 0,
+        squares: [], //clé qui contient un tableau vide et permet la récupération des données
+        selectedSquare: '' //permet d'assigner la couleur créée
+      },
+      methods: {
+        resetColor(){
+          this.red = 0;
+          this.green = 0;
+          this.blue = 0;
+        },
+        saveSquare(){
+          //sauvegarde des contenus des inputs
+          this.squares.push(`rgb(${this.red}, ${this.green}, ${this.blue})`);
+          this.resetColor();
+          // console.log(this.squares); permet de vérifier si on récupère bien les données entrées dans les inputs
+        },
+        reset(){
+          //reinitialisation du tableau de couleurs
+          this.squares = [];
+          this.resetColor();
+          
+        }
+      },
+      computed: {
+        nbrOfSquares(){
+          //sert a retourner le nombre de couleurs
+          return this.squares.length;
+        }
+      }
+    })
+  </script>
+</body>
+</html>
